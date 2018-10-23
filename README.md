@@ -2,11 +2,11 @@
  
  Package provides tools for creating REST Api server
 
-## Примеры
+## Examples
 
 Real usage example can be found in example directory
 
-## Тестирование
+## Tests
 
 For mongo_collection_test.dart mongoDB server, should be started on `localhost:27017`
 
