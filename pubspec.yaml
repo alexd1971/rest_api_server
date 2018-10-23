@@ -1,7 +1,7 @@
 name: rest_api_server
 description: A starting point for Dart libraries or applications.
 version: 0.0.1
-homepage: https://github.com/alexd/rest_api_server
+homepage: https://github.com/alexd1971/rest_api_server
 author: Aleksey Danilevskiy <alexey.danilevsky@gmail.com>
 
 environment:
