@@ -1,0 +1,22 @@
+POST http://localhost:7777/v1/login
+Content-Type: application/json
+
+{
+  "email": "fd@email.com",
+  "password": "password1"
+}
+
+###
+POST http://localhost:7777/v1/users
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOltudWxsXSwiZXhwIjoxNTQwMzAxNjY5LCJpYXQiOjE1NDAyMTUyNjksImlzcyI6IlNvbWUgb3JnYW5pemF0aW9uIiwicGxkIjp7InJvbGUiOiJhbnkifSwic3ViIjoiYW55In0=.2xvaixJOC4CJhkubp9QSSXcXV3W88E944u38N0x7V=
+
+{
+  "name": "Vasya Pupkin",
+  "occupation": "Roga & Kopyta"
+}
+
+###
+
+GET http://localhost:7777/v1/users/5bcdc77275db90244d70c952
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOltudWxsXSwiZXhwIjoxNTQwMzAxNjg3LCJpYXQiOjE1NDAyMTUyODcsImlzcyI6IlNvbWUgb3JnYW5pemF0aW9uIiwicGxkIjp7InJvbGUiOiJhbnkifSwic3ViIjoiYW55In0=.ALFZ_6GhVBhgFdLFIaSmqJmbjequhS2Oq6oi28Jqrgc=
