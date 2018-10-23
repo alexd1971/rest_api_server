@@ -176,7 +176,8 @@ class Router {
               argValue = await request.readAsString();
               break;
             default:
-              throw ArgumentError('Request body type in ${method} must be Map or String');
+              throw ArgumentError(
+                  'Request body type in ${method} must be Map or String');
           }
         } else if (paramName == 'requestHeaders') {
           argValue = request.headers;

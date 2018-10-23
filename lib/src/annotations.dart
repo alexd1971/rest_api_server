@@ -3,19 +3,18 @@ import 'middleware.dart';
 /// Abstract annotation Routable
 ///
 /// Base class for [Resource] annotation and methods annotations:
-/// 
+///
 /// * [Get],
 /// * [Post],
 /// * [Put],
 /// * [Patch]
 /// * [Delete]
 abstract class Routable {
-
   /// Relative path to resource
   final String path;
 
   /// Middleware for the routable resource
-  /// 
+  ///
   /// For a base resource class the middleware is applied to each resource method.
   /// For a method the middleware is applied to the method
   final Middleware middleware;
@@ -33,9 +32,9 @@ abstract class Routable {
 ///       Users get users => Users()
 ///     }
 class Resource extends Routable {
-
   /// Creates resource annotation
-  const Resource({String path = '', Middleware middleware}): super(path, middleware);
+  const Resource({String path = '', Middleware middleware})
+      : super(path, middleware);
 }
 
 /// Get
@@ -43,9 +42,9 @@ class Resource extends Routable {
 /// The annotation of resource method to indicate the method shuold be applied to the resource
 /// with `path` while requested with HTTP-method GET
 class Get extends Routable {
-
   /// Creates Get annotation
-  const Get({String path = '', Middleware middleware}): super(path, middleware);
+  const Get({String path = '', Middleware middleware})
+      : super(path, middleware);
 }
 
 /// Post
@@ -53,9 +52,9 @@ class Get extends Routable {
 /// The annotation of resource method to indicate the method shuold be applied to the resource
 /// with `path` while requested with HTTP-method POST
 class Post extends Routable {
-
   /// Create Post annotation
-  const Post({String path = '', Middleware middleware}): super(path, middleware);
+  const Post({String path = '', Middleware middleware})
+      : super(path, middleware);
 }
 
 /// Put
@@ -63,9 +62,9 @@ class Post extends Routable {
 /// The annotation of resource method to indicate the method shuold be applied to the resource
 /// with `path` while requested with HTTP-method PUT
 class Put extends Routable {
-
   /// Create Put annotation
-  const Put({String path = '', Middleware middleware}): super(path, middleware);
+  const Put({String path = '', Middleware middleware})
+      : super(path, middleware);
 }
 
 /// Patch
@@ -73,9 +72,9 @@ class Put extends Routable {
 /// The annotation of resource method to indicate the method shuold be applied to the resource
 /// with `path` while requested with HTTP-method PATCH
 class Patch extends Routable {
-
   /// Create Patch annotation
-  const Patch({String path = '', Middleware middleware}): super(path, middleware);
+  const Patch({String path = '', Middleware middleware})
+      : super(path, middleware);
 }
 
 /// Delete
@@ -83,7 +82,7 @@ class Patch extends Routable {
 /// The annotation of resource method to indicate the method shuold be applied to the resource
 /// with `path` while requested with HTTP-method DELETE
 class Delete extends Routable {
-
   /// Creates Delete annotation
-  const Delete({String path = '', Middleware middleware}): super(path, middleware);
+  const Delete({String path = '', Middleware middleware})
+      : super(path, middleware);
 }

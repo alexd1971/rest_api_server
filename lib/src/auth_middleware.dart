@@ -14,23 +14,23 @@ export 'jwt.dart' show Jwt;
 /// The middleware is responsible for user authentication
 ///
 /// [loginPath] should contain path to login api-method.
-/// 
+///
 /// If login successful login api-method should return shelf [Response] object with `status`
 /// 200-Ok and `context` containing following [Map]:
-/// 
+///
 ///     {
 ///       subject: <userId>,
 ///       payload: {
 ///         // any additional information
 ///       }
 ///     }
-/// 
+///
 /// If authentication was successful ([Response] `status` 200-Ok), then response `Authorization` header
 /// will contain jwt which must be sent from cleint along with each subsequent requests
-/// 
+///
 /// Jwt has expiry period after that jwt is not valid. If request has valid jwt then
 /// response will contain new jwt with new expiry date and time.
-/// 
+///
 /// If jwt is not valid request will not proceed to the handler
 class AuthMiddleware implements Middleware {
   final String _loginPath;
@@ -40,13 +40,13 @@ class AuthMiddleware implements Middleware {
   /// Creates AuthMiddleware
   ///
   /// [loginPath] path to the login api-method.
-  /// 
+  ///
   /// Example:
   ///
   ///     loginPath: '/api/login'
   ///
   /// [exclude] - [Map] object describing api-paths which does not require authentication.
-  ///  
+  ///
   /// Example:
   ///     {
   ///       'GET': [
@@ -84,7 +84,7 @@ class AuthMiddleware implements Middleware {
           } else {
             if (jwt == null) {
               throw (JwtException(
-                'Unauthorized: Authorization header is not provided'));
+                  'Unauthorized: Authorization header is not provided'));
             }
             request = _addJwtPayloadToRequestContext(request, jwt);
           }
@@ -118,12 +118,11 @@ class AuthMiddleware implements Middleware {
         });
       };
 
-  shelf.Request _addJwtPayloadToRequestContext(shelf.Request request, String jwt) {
+  shelf.Request _addJwtPayloadToRequestContext(
+      shelf.Request request, String jwt) {
     JwtClaim jwtClaim = _jwt.decode(jwt);
-    return request.change(context: {
-      'subject': jwtClaim.subject,
-      'payload': jwtClaim.payload
-    });
+    return request.change(
+        context: {'subject': jwtClaim.subject, 'payload': jwtClaim.payload});
   }
 
   shelf.Response _addJwtToResponse(String jwt, shelf.Response response) =>

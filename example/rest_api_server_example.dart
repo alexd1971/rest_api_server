@@ -26,9 +26,10 @@ main() async {
   await mongoDb.open();
 
   router.add(
-    Api(usersResource: UsersResource(UsersCollection(mongoDb.collection('users')))),
-    path: '/v1'
-  );
+      Api(
+          usersResource:
+              UsersResource(UsersCollection(mongoDb.collection('users')))),
+      path: '/v1');
 
   ApiServer apiServer = ApiServer(
       address: address,
@@ -39,7 +40,7 @@ main() async {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Expose-Headers': 'Authorization, Content-Type',
             'Access-Control-Allow-Headers':
-              'Authorization, Origin, X-Requested-With, Content-Type, Accept, Content-Disposition',
+                'Authorization, Origin, X-Requested-With, Content-Type, Accept, Content-Disposition',
             'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE'
           }))
           .addMiddleware(AuthMiddleware(
@@ -60,14 +61,10 @@ class Api {
 
   @Post(path: 'login')
   shelf.Response login() {
-    return shelf.Response.ok('Ok',
-      context: {
-        'subject': 'any',
-        'payload': {
-          'role': 'any'
-        }
-      }
-    );
+    return shelf.Response.ok('Ok', context: {
+      'subject': 'any',
+      'payload': {'role': 'any'}
+    });
   }
 
   @Resource(path: 'users')
@@ -75,20 +72,21 @@ class Api {
 }
 
 class UsersResource {
-
   final UsersCollection usersCollection;
 
   UsersResource(this.usersCollection);
 
   @Post(path: '')
-  Future<User> create(Map requestBody) => usersCollection.insert(User.fromJson(requestBody));
+  Future<User> create(Map requestBody) =>
+      usersCollection.insert(User.fromJson(requestBody));
 
   @Get(path: '{userId}')
-  Future<User> getUser(String userId) => usersCollection.findOne(UserId(userId));
+  Future<User> getUser(String userId) =>
+      usersCollection.findOne(UserId(userId));
 }
 
 class UserId extends ObjectId {
-  UserId._(id): super(id);
+  UserId._(id) : super(id);
   factory UserId(id) {
     if (id == null) return null;
     return UserId._(id);
@@ -96,38 +94,28 @@ class UserId extends ObjectId {
 }
 
 class User extends Model {
-
   String name;
   String occupation;
 
-  User({
-    UserId id,
-    this.name,
-    this.occupation
-  }): super(id);
+  User({UserId id, this.name, this.occupation}) : super(id);
 
   factory User.fromJson(Map<String, dynamic> json) {
     if (json == null) return null;
     return User(
-      id: UserId(json['id']),
-      name: json['name'],
-      occupation: json['occupation']
-    );
+        id: UserId(json['id']),
+        name: json['name'],
+        occupation: json['occupation']);
   }
 
   @override
   Map<String, dynamic> get json => super.json
-    ..addAll({
-      'name': name,
-      'occupation': occupation
-    })
+    ..addAll({'name': name, 'occupation': occupation})
     ..removeWhere((key, value) => value == null);
 }
 
 class UsersCollection extends MongoCollection<User, UserId> {
-  
-  UsersCollection(mongo.DbCollection collection): super(collection);
-  
+  UsersCollection(mongo.DbCollection collection) : super(collection);
+
   @override
   User createModel(Map<String, dynamic> data) => User.fromJson(data);
 }

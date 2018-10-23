@@ -106,30 +106,21 @@ void main() {
     final router = Router();
     router.add(RequestBodyAsParameter(), path: 'resource');
     final request = shelf.Request(
-        'POST',
-        Uri.parse('http://localhost/resource/map'),
+        'POST', Uri.parse('http://localhost/resource/map'),
         headers: {'Content-Type': 'application/json'},
-        body: json.encode({
-          'param': 'value'
-        })
-      );
+        body: json.encode({'param': 'value'}));
     final response = await router.handler(request);
     expect(response.statusCode, HttpStatus.ok);
     final body = await response.readAsString();
-    expect(json.decode(body), {
-      'param': 'value'
-    });
+    expect(json.decode(body), {'param': 'value'});
   });
 
   test('request body as method parameter (String)', () async {
     final router = Router();
     router.add(RequestBodyAsParameter(), path: 'resource');
     final request = shelf.Request(
-        'POST',
-        Uri.parse('http://localhost/resource/string'),
-        headers: {'Content-Type': 'text/plain'},
-        body: 'test'
-      );
+        'POST', Uri.parse('http://localhost/resource/string'),
+        headers: {'Content-Type': 'text/plain'}, body: 'test');
     final response = await router.handler(request);
     expect(response.statusCode, HttpStatus.ok);
     final body = await response.readAsString();
@@ -140,10 +131,8 @@ void main() {
     final router = Router();
     router.add(RequestHeadersAsParameter(), path: 'resource');
     final request = shelf.Request(
-        'GET',
-        Uri.parse('http://localhost/resource/'),
-        headers: {'x-test': '123'}
-      );
+        'GET', Uri.parse('http://localhost/resource/'),
+        headers: {'x-test': '123'});
     final response = await router.handler(request);
     expect(response.statusCode, HttpStatus.ok);
     final body = await response.readAsString();
@@ -273,6 +262,7 @@ class RequestBodyAsParameter {
   Map<String, dynamic> method1(Map requestBody) {
     return requestBody;
   }
+
   @Post(path: 'string')
   String method2(String requestBody) {
     return requestBody;

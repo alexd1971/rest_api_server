@@ -12,45 +12,45 @@ abstract class MongoCollection<T extends Model, Id extends ObjectId> {
   MongoCollection(this.collection);
 
   /// Inserts new document into collection
-  /// 
+  ///
   /// Returns inserted data model
   Future<T> insert(T object) async {
     final id = mongo.ObjectId();
-    await collection
-        .insert(object.json
-          ..addAll({'_id': id})
-          ..remove('id'));
+    await collection.insert(object.json
+      ..addAll({'_id': id})
+      ..remove('id'));
     return getObjectByMongoId(id);
   }
 
   /// Finds document by id
-  /// 
+  ///
   /// Returns data model object of type `T`
-  Future<T> findOne(Id id) => getObjectByMongoId(mongo.ObjectId.fromHexString(id.value));
+  Future<T> findOne(Id id) =>
+      getObjectByMongoId(mongo.ObjectId.fromHexString(id.value));
 
   /// Finds documents by criteria
   ///
   /// [selector] looks like the following expression:
   ///
   ///     where.eq('name', 'Paul').and(where.eq('lastname','McCartney'))
-  Stream<T> find([mongo.SelectorBuilder selector]) => buildQuery(selector).map((data) => createModel(data));
+  Stream<T> find([mongo.SelectorBuilder selector]) =>
+      buildQuery(selector).map((data) => createModel(data));
 
   /// Updates any attribute set of object
   ///
   /// Only attributes with non `null` values are updated
   Future<T> update(T object) async {
     final mongoId = mongo.ObjectId.fromHexString(object.id.json);
-    await collection.update(mongo.where.eq('_id', mongoId), {
-      '\$set': object.json..remove('id')
-    });
+    await collection.update(
+        mongo.where.eq('_id', mongoId), {'\$set': object.json..remove('id')});
     return getObjectByMongoId(mongoId);
-
   }
 
   /// Replaces the whole object
   Future<T> replace(T object) async {
     final mongoId = mongo.ObjectId.fromHexString(object.id.json);
-    await collection.update(mongo.where.eq('_id', mongoId), object.json..remove('id'));
+    await collection.update(
+        mongo.where.eq('_id', mongoId), object.json..remove('id'));
     return getObjectByMongoId(mongoId);
   }
 
@@ -92,5 +92,5 @@ abstract class MongoCollection<T extends Model, Id extends ObjectId> {
   }
 
   /// Creates model object from data
-  T createModel(Map<String, dynamic> data); 
+  T createModel(Map<String, dynamic> data);
 }

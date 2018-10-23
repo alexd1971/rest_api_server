@@ -6,7 +6,7 @@ import 'middleware.dart';
 /// CorsHeadersMiddleware
 ///
 /// Adds CORS-headers to the response
-/// 
+///
 /// Example:
 ///     CorsHeadersMiddleware({
 ///       'Access-Control-Allow-Origin': '*',

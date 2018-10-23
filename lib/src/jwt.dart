@@ -7,7 +7,7 @@ export 'package:jaguar_jwt/jaguar_jwt.dart' show JwtException, JwtClaim;
 /// JWT manager
 ///
 /// The manager is responsible for:
-/// 
+///
 /// * issue jwt
 /// * verify jwt
 /// * decode jwt

@@ -6,7 +6,7 @@ import 'package:shelf/shelf_io.dart' as io;
 
 /// Rest Api server
 ///
-/// 
+///
 class ApiServer {
   final InternetAddress _address;
   final int _port;
