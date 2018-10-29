@@ -71,10 +71,10 @@ abstract class MongoCollection<T extends Model, Id extends ObjectId> {
   }
 
   /// Builds mongo database query
-  Stream<Map<String, dynamic>> buildQuery([mongo.SelectorBuilder match]) {
+  Stream<Map<String, dynamic>> buildQuery([mongo.SelectorBuilder selector]) {
     final pipeline = <Map<String, dynamic>>[];
-    if (match != null) {
-      pipeline.add({'\$match': match.map['\$query']});
+    if (selector != null && selector.map.isNotEmpty) {
+      pipeline.add({'\$match': selector.map['\$query']});
     }
     pipeline.addAll([
       {
@@ -88,6 +88,12 @@ abstract class MongoCollection<T extends Model, Id extends ObjectId> {
         }
       }
     ]);
+    if (selector.paramSkip != 0) pipeline.add({
+      '\$skip': selector.paramSkip
+    });
+    if (selector.paramLimit != 0) pipeline.add({
+      '\$limit': selector.paramLimit
+    });
     return collection.aggregateToStream(pipeline);
   }
 
