@@ -34,7 +34,7 @@ abstract class MongoCollection<T extends Model, Id extends ObjectId> {
   ///
   ///     where.eq('name', 'Paul').and(where.eq('lastname','McCartney'))
   Stream<T> find([mongo.SelectorBuilder selector]) =>
-      buildQuery(selector).map((data) => createModel(data));
+      buildQuery(selector ?? mongo.where).map((data) => createModel(data));
 
   /// Updates any attribute set of object
   ///
@@ -71,9 +71,12 @@ abstract class MongoCollection<T extends Model, Id extends ObjectId> {
   }
 
   /// Builds mongo database query
-  Stream<Map<String, dynamic>> buildQuery([mongo.SelectorBuilder selector]) {
+  Stream<Map<String, dynamic>> buildQuery(mongo.SelectorBuilder selector) {
+    
+    if (selector == null) throw (ArgumentError.notNull('selector'));
+
     final pipeline = <Map<String, dynamic>>[];
-    if (selector != null && selector.map.isNotEmpty) {
+    if (selector.map.isNotEmpty) {
       pipeline.add({'\$match': selector.map['\$query']});
     }
     pipeline.addAll([
