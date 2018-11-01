@@ -125,6 +125,7 @@ class Router {
   ///
   /// Example: if there is a path `/users/{userId}/messages`, the function returns `[userId]`
   List<String> _getPathParameters(String path) {
+    if (path.isEmpty) return [];
     path = url.normalize(path);
     if (url.isAbsolute(path)) {
       path = url.relative(path, from: '/');
