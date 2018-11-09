@@ -19,14 +19,14 @@ abstract class MongoCollection<T extends Model, Id extends ObjectId> {
     await collection.insert(object.json
       ..addAll({'_id': id})
       ..remove('id'));
-    return getObjectByMongoId(id);
+    return getObjectById(id);
   }
 
   /// Finds document by id
   ///
   /// Returns data model object of type `T`
   Future<T> findOne(Id id) =>
-      getObjectByMongoId(mongo.ObjectId.fromHexString(id.value));
+      getObjectById(mongo.ObjectId.fromHexString(id.value));
 
   /// Finds documents by criteria
   ///
@@ -43,7 +43,7 @@ abstract class MongoCollection<T extends Model, Id extends ObjectId> {
     final mongoId = mongo.ObjectId.fromHexString(object.id.json);
     await collection.update(
         mongo.where.eq('_id', mongoId), {'\$set': object.json..remove('id')});
-    return getObjectByMongoId(mongoId);
+    return getObjectById(mongoId);
   }
 
   /// Replaces the whole object
@@ -51,24 +51,29 @@ abstract class MongoCollection<T extends Model, Id extends ObjectId> {
     final mongoId = mongo.ObjectId.fromHexString(object.id.json);
     await collection.update(
         mongo.where.eq('_id', mongoId), object.json..remove('id'));
-    return getObjectByMongoId(mongoId);
+    return getObjectById(mongoId);
   }
 
   /// Removes object from collection
   Future<T> delete(Id id) async {
     final mongoId = mongo.ObjectId.fromHexString(id.json);
-    final deletedObject = await getObjectByMongoId(mongoId);
+    final deletedObject = await getObjectById(mongoId);
     await collection.remove(mongo.where.eq('_id', mongoId));
     return deletedObject;
   }
 
   /// Gets model by its id
   @protected
-  Future<T> getObjectByMongoId(mongo.ObjectId id) async {
+  Future<T> getObjectById(mongo.ObjectId id) async {
     final data = await buildQuery(mongo.where.eq('_id', id)).toList();
     if (data.length == 0) return null;
     return createModel(data.first);
   }
+
+  /// Use `getObjectById` instead
+  @protected
+  @Deprecated('Is going to be removed in future release')
+  Future<T> getObjectByMongoId(mongo.ObjectId id) => getObjectById(id);
 
   /// Builds mongo database query
   Stream<Map<String, dynamic>> buildQuery(mongo.SelectorBuilder selector) {
