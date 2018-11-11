@@ -70,16 +70,26 @@ abstract class MongoCollection<T extends Model, Id extends ObjectId> {
     return createModel(data.first);
   }
 
-  /// Use [getObjectById]
-  @protected
-  @Deprecated('Will be removed in future release')
-  Future<T> getObjectByMongoId(mongo.ObjectId id) => getObjectById(id);
-
   /// Takes objects from database according to query
+  @protected
   Stream<Map<String, dynamic>> getObjectsByQuery(mongo.SelectorBuilder query) {
-    
     if (query == null) throw (ArgumentError.notNull('query'));
+    return collection.aggregateToStream(buildPipeline(query));
+  }
 
+  /// Builds aggregation pipeline based on query.
+  /// 
+  /// Basic pipeline contains only following stages:
+  /// - $match if `query` contains some criteria
+  /// - $addFields adds `id` field as string representation of `_id`
+  /// - $project removes unnessesary `_id` field
+  /// - $sort sorts objects if `orderby` exists in `query`
+  /// - $skip skips objects
+  /// - $limit limits object count
+  /// 
+  /// In more comlicated cases it is enough to override this method
+  @protected
+  List<Map<String, dynamic>> buildPipeline(mongo.SelectorBuilder query) {
     final pipeline = <Map<String, dynamic>>[];
     if (query.map.isNotEmpty) {
       pipeline.add({'\$match': query.map['\$query']});
@@ -96,19 +106,29 @@ abstract class MongoCollection<T extends Model, Id extends ObjectId> {
         }
       }
     ]);
+    if (query.map.containsKey('orderby')) pipeline.add({
+      '\$sort': query.map['orderby']
+    });
     if (query.paramSkip != 0) pipeline.add({
       '\$skip': query.paramSkip
     });
     if (query.paramLimit != 0) pipeline.add({
       '\$limit': query.paramLimit
     });
-    return collection.aggregateToStream(pipeline);
+    return pipeline;
   }
 
+  /// Use [getObjectById]
+  @protected
+  @Deprecated('Will be removed in future release')
+  Future<T> getObjectByMongoId(mongo.ObjectId id) => getObjectById(id);
+
   /// Use [getObjectsByQuery]
+  @protected
   @Deprecated('Will be removed in future release')
   Stream<Map<String, dynamic>> buildQuery(mongo.SelectorBuilder selector) => getObjectsByQuery(selector);
 
   /// Creates model object from data
+  @protected
   T createModel(Map<String, dynamic> data);
 }
