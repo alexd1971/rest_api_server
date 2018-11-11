@@ -91,7 +91,7 @@ abstract class MongoCollection<T extends Model, Id extends ObjectId> {
   @protected
   List<Map<String, dynamic>> buildPipeline(mongo.SelectorBuilder query) {
     final pipeline = <Map<String, dynamic>>[];
-    if (query.map.isNotEmpty) {
+    if (query.map.containsKey('\$query')) {
       pipeline.add({'\$match': query.map['\$query']});
     }
     pipeline.addAll([

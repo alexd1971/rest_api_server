@@ -109,7 +109,14 @@ main() {
       expect(found.json, object1.json);
     });
 
-    test('find', () async {
+    test('find all', () async {
+      final collection = TestMongoCollection(mongoCollection);
+      final found = await collection.find();
+      expect(found.map((obj) => obj.json),
+          emitsInAnyOrder([object1.json, object2.json]));
+    });
+
+    test('find by query', () async {
       final collection = TestMongoCollection(mongoCollection);
       final found = await collection.find(mongo.where.lt('intParam', 500));
       expect(found.map((obj) => obj.json),
