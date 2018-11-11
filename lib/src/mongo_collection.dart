@@ -34,7 +34,7 @@ abstract class MongoCollection<T extends Model, Id extends ObjectId> {
   ///
   ///     where.eq('name', 'Paul').and(where.eq('lastname','McCartney'))
   Stream<T> find([mongo.SelectorBuilder selector]) =>
-      buildQuery(selector ?? mongo.where).map((data) => createModel(data));
+      getObjectsByQuery(selector ?? mongo.where).map((data) => createModel(data));
 
   /// Updates any attribute set of object
   ///
@@ -65,24 +65,24 @@ abstract class MongoCollection<T extends Model, Id extends ObjectId> {
   /// Gets model by its id
   @protected
   Future<T> getObjectById(mongo.ObjectId id) async {
-    final data = await buildQuery(mongo.where.eq('_id', id)).toList();
+    final data = await getObjectsByQuery(mongo.where.eq('_id', id)).toList();
     if (data.length == 0) return null;
     return createModel(data.first);
   }
 
-  /// Use `getObjectById` instead
+  /// Use [getObjectById]
   @protected
-  @Deprecated('Is going to be removed in future release')
+  @Deprecated('Will be removed in future release')
   Future<T> getObjectByMongoId(mongo.ObjectId id) => getObjectById(id);
 
-  /// Builds mongo database query
-  Stream<Map<String, dynamic>> buildQuery(mongo.SelectorBuilder selector) {
+  /// Takes objects from database according to query
+  Stream<Map<String, dynamic>> getObjectsByQuery(mongo.SelectorBuilder query) {
     
-    if (selector == null) throw (ArgumentError.notNull('selector'));
+    if (query == null) throw (ArgumentError.notNull('query'));
 
     final pipeline = <Map<String, dynamic>>[];
-    if (selector.map.isNotEmpty) {
-      pipeline.add({'\$match': selector.map['\$query']});
+    if (query.map.isNotEmpty) {
+      pipeline.add({'\$match': query.map['\$query']});
     }
     pipeline.addAll([
       {
@@ -96,14 +96,18 @@ abstract class MongoCollection<T extends Model, Id extends ObjectId> {
         }
       }
     ]);
-    if (selector.paramSkip != 0) pipeline.add({
-      '\$skip': selector.paramSkip
+    if (query.paramSkip != 0) pipeline.add({
+      '\$skip': query.paramSkip
     });
-    if (selector.paramLimit != 0) pipeline.add({
-      '\$limit': selector.paramLimit
+    if (query.paramLimit != 0) pipeline.add({
+      '\$limit': query.paramLimit
     });
     return collection.aggregateToStream(pipeline);
   }
+
+  /// Use [getObjectsByQuery]
+  @Deprecated('Will be removed in future release')
+  Stream<Map<String, dynamic>> buildQuery(mongo.SelectorBuilder selector) => getObjectsByQuery(selector);
 
   /// Creates model object from data
   T createModel(Map<String, dynamic> data);
