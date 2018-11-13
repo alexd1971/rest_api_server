@@ -34,7 +34,7 @@ abstract class MongoCollection<T extends Model, Id extends ObjectId> {
   ///
   ///     where.eq('name', 'Paul').and(where.eq('lastname','McCartney'))
   Stream<T> find([mongo.SelectorBuilder selector]) =>
-      getObjectsByQuery(selector ?? mongo.where).map((data) => createModel(data));
+      getObjectsByQuery(selector ?? mongo.where);
 
   /// Updates any attribute set of object
   ///
@@ -65,16 +65,16 @@ abstract class MongoCollection<T extends Model, Id extends ObjectId> {
   /// Gets model by its id
   @protected
   Future<T> getObjectById(mongo.ObjectId id) async {
-    final data = await getObjectsByQuery(mongo.where.eq('_id', id)).toList();
-    if (data.length == 0) return null;
-    return createModel(data.first);
+    final objectList = await getObjectsByQuery(mongo.where.eq('_id', id)).toList();
+    if (objectList.length == 0) return null;
+    return objectList.first;
   }
 
   /// Takes objects from database according to query
   @protected
-  Stream<Map<String, dynamic>> getObjectsByQuery(mongo.SelectorBuilder query) {
+  Stream<T> getObjectsByQuery(mongo.SelectorBuilder query) {
     if (query == null) throw (ArgumentError.notNull('query'));
-    return collection.aggregateToStream(buildPipeline(query));
+    return collection.aggregateToStream(buildPipeline(query)).map((data) => createModel(data));
   }
 
   /// Builds aggregation pipeline based on query.
@@ -117,16 +117,6 @@ abstract class MongoCollection<T extends Model, Id extends ObjectId> {
     });
     return pipeline;
   }
-
-  /// Use [getObjectById]
-  @protected
-  @Deprecated('Will be removed in future release')
-  Future<T> getObjectByMongoId(mongo.ObjectId id) => getObjectById(id);
-
-  /// Use [getObjectsByQuery]
-  @protected
-  @Deprecated('Will be removed in future release')
-  Stream<Map<String, dynamic>> buildQuery(mongo.SelectorBuilder selector) => getObjectsByQuery(selector);
 
   /// Creates model object from data
   @protected
