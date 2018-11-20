@@ -182,6 +182,8 @@ class Router {
           }
         } else if (paramName == 'requestHeaders') {
           argValue = request.headers;
+        } else if (paramName == 'context') {
+          argValue = request.context;
         } else {
           argValue = null;
         }

@@ -139,6 +139,18 @@ void main() {
     expect(json.decode(body), containsPair('x-test', '123'));
   });
 
+  test('request context as method parameter', () async {
+    final router = Router();
+    router.add(RequestContextAsParameter(), path: 'resource');
+    final request = shelf.Request(
+        'GET', Uri.parse('http://localhost/resource/'),
+        context: {'key': 'value'});
+    final response = await router.handler(request);
+    expect(response.statusCode, HttpStatus.ok);
+    final body = await response.readAsString();
+    expect(json.decode(body), {'key': 'value'});
+  });
+
   test('method middleware', () async {
     final router = Router();
     router.add(TestMiddlewareResource());
@@ -274,6 +286,14 @@ class RequestHeadersAsParameter {
   @Get(path: '')
   Map<String, dynamic> method(Map requestHeaders) {
     return requestHeaders;
+  }
+}
+
+/// Resource to test request context as method parameter
+class RequestContextAsParameter {
+  @Get(path: '')
+  Map<String, dynamic> method(Map context) {
+    return context;
   }
 }
 
