@@ -93,11 +93,12 @@ class UserId extends ObjectId {
   }
 }
 
-class User extends Model {
+class User extends Model<UserId> {
+  UserId id;
   String name;
   String occupation;
 
-  User({UserId id, this.name, this.occupation}) : super(id);
+  User({this.id, this.name, this.occupation});
 
   factory User.fromJson(Map<String, dynamic> json) {
     if (json == null) return null;
@@ -108,9 +109,9 @@ class User extends Model {
   }
 
   @override
-  Map<String, dynamic> get json => super.json
-    ..addAll({'name': name, 'occupation': occupation})
-    ..removeWhere((key, value) => value == null);
+  Map<String, dynamic> get json => {
+    'id': id?.json, 'name': name, 'occupation': occupation
+    }..removeWhere((key, value) => value == null);
 }
 
 class UsersCollection extends MongoCollection<User, UserId> {
