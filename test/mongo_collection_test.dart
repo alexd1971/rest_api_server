@@ -14,11 +14,12 @@ class TestModelId extends ObjectId {
   }
 }
 
-class TestModel extends Model {
+class TestModel extends Model<TestModelId> {
+  TestModelId id;
   int intParam;
   String stringParam;
 
-  TestModel({TestModelId id, this.intParam, this.stringParam}) : super(id);
+  TestModel({this.id, this.intParam, this.stringParam});
 
   factory TestModel.fromJson(Map<String, dynamic> json) {
     if (json == null) return null;
@@ -29,9 +30,9 @@ class TestModel extends Model {
   }
 
   @override
-  Map<String, dynamic> get json => super.json
-    ..addAll({'intParam': intParam, 'stringParam': stringParam}
-      ..removeWhere((key, value) => value == null));
+  Map<String, dynamic> get json => {
+    'id': id?.json, 'intParam': intParam, 'stringParam': stringParam
+    }..removeWhere((key, value) => value == null);
 }
 
 class TestMongoCollection extends MongoCollection<TestModel, TestModelId> {
