@@ -25,7 +25,7 @@ void main() {
             .addHandler((shelf.Request request) {
           switch (request.requestedUri.path) {
             case '/unauthorized':
-              throw (UnauthorizedException(null, 'login failed'));
+              throw (UnauthorizedException({}, 'login failed'));
               break;
             case '/format_exception':
               throw (FormatException('wrong format'));
@@ -46,7 +46,7 @@ void main() {
         .get(server.address.host, server.port, '/unauthorized');
     final response = await request.close();
     expect(response.transform(utf8.decoder).transform(json.decoder).join(),
-        completion('Status 401: Unauthorized: login failed'));
+        completion('login failed'));
     expect(response.statusCode, HttpStatus.unauthorized);
   });
 

@@ -70,7 +70,7 @@ void main() {
     HttpClientResponse response = await request.close();
     expect(response.statusCode, HttpStatus.unauthorized);
     String message = await response.transform(utf8.decoder).transform(json.decoder).join();
-    expect(message, 'Unauthorized: Authorization header is not provided');
+    expect(message, 'Authorization header is not provided');
   });
 
   test('access to anonimous resource with not allowed method', () async {
@@ -79,7 +79,7 @@ void main() {
     HttpClientResponse response = await request.close();
     expect(response.statusCode, HttpStatus.unauthorized);
     String message = await response.transform(utf8.decoder).transform(json.decoder).join();
-    expect(message, 'Unauthorized: Authorization header is not provided');
+    expect(message, 'Authorization header is not provided');
   });
 
   test('login', () async {

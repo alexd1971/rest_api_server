@@ -16,7 +16,7 @@ class HttpExceptionMiddleware implements Middleware {
         try {
           response = await innerHandler(request);
         } on HttpException catch (e) {
-          response = shelf.Response(e.status, body: json.encode(e.toString()));
+          response = shelf.Response(e.status, body: json.encode(e.message));
         } catch (e, s) {
           response =
               shelf.Response(HttpStatus.internalServerError, body: json.encode('$e\n$s'));

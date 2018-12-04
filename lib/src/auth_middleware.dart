@@ -85,7 +85,7 @@ class AuthMiddleware implements Middleware {
           } else {
             if (jwt == null) {
               throw (JwtException(
-                  'Unauthorized: Authorization header is not provided'));
+                  'Authorization header is not provided'));
             }
             request = _addJwtPayloadToRequestContext(request, jwt);
           }
@@ -98,7 +98,7 @@ class AuthMiddleware implements Middleware {
               if (!response.context.containsKey('subject') ||
                   response.context['subject'] == null) {
                 return shelf.Response(HttpStatus.unauthorized,
-                    body: json.encode('Unauthorized: user not found'));
+                    body: json.encode('User not found'));
               }
               String token = _jwt.issue(response.context['subject'],
                   payload: response.context['payload']);
