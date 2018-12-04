@@ -1,4 +1,5 @@
 import 'dart:io' hide HttpException;
+import 'dart:convert';
 
 import 'package:shelf/shelf.dart' as shelf;
 
@@ -15,10 +16,10 @@ class HttpExceptionMiddleware implements Middleware {
         try {
           response = await innerHandler(request);
         } on HttpException catch (e) {
-          response = shelf.Response(e.status, body: e.toString());
+          response = shelf.Response(e.status, body: json.encode(e.toString()));
         } catch (e, s) {
           response =
-              shelf.Response(HttpStatus.internalServerError, body: '$e\n$s');
+              shelf.Response(HttpStatus.internalServerError, body: json.encode('$e\n$s'));
         }
         return response;
       };

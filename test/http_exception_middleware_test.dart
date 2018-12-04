@@ -45,7 +45,7 @@ void main() {
     final request = await HttpClient()
         .get(server.address.host, server.port, '/unauthorized');
     final response = await request.close();
-    expect(response.transform(utf8.decoder).join(),
+    expect(response.transform(utf8.decoder).transform(json.decoder).join(),
         completion('Status 401: Unauthorized: login failed'));
     expect(response.statusCode, HttpStatus.unauthorized);
   });
@@ -54,7 +54,7 @@ void main() {
     final request = await HttpClient()
         .get(server.address.host, server.port, '/format_exception');
     final response = await request.close();
-    expect(response.transform(utf8.decoder).join(),
+    expect(response.transform(utf8.decoder).transform(json.decoder).join(),
         completion(startsWith('FormatException: wrong format')));
     expect(response.statusCode, HttpStatus.internalServerError);
   });

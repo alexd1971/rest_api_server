@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io' hide HttpException;
 
 import 'package:path/path.dart';
@@ -97,7 +98,7 @@ class AuthMiddleware implements Middleware {
               if (!response.context.containsKey('subject') ||
                   response.context['subject'] == null) {
                 return shelf.Response(HttpStatus.unauthorized,
-                    body: 'Unauthorized: user not found');
+                    body: json.encode('Unauthorized: user not found'));
               }
               String token = _jwt.issue(response.context['subject'],
                   payload: response.context['payload']);
@@ -111,7 +112,7 @@ class AuthMiddleware implements Middleware {
           });
         }).catchError((e) {
           if (e is JwtException) {
-            return shelf.Response(HttpStatus.unauthorized, body: e.toString());
+            return shelf.Response(HttpStatus.unauthorized, body: json.encode(e.toString()));
           } else {
             throw (e);
           }
