@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/alexd1971/rest_api_server.svg?branch=master)](https://travis-ci.com/alexd1971/rest_api_server)
+
 # REST API Server
  
  Package provides tools for creating REST Api server
