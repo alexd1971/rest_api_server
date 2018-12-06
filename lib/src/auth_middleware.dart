@@ -84,8 +84,7 @@ class AuthMiddleware implements Middleware {
             }
           } else {
             if (jwt == null) {
-              throw (JwtException(
-                  'Authorization header is not provided'));
+              throw (JwtException('Authorization header is not provided'));
             }
             request = _addJwtPayloadToRequestContext(request, jwt);
           }
@@ -112,7 +111,8 @@ class AuthMiddleware implements Middleware {
           });
         }).catchError((e) {
           if (e is JwtException) {
-            return shelf.Response(HttpStatus.unauthorized, body: json.encode(e.toString()));
+            return shelf.Response(HttpStatus.unauthorized,
+                body: json.encode(e.toString()));
           } else {
             throw (e);
           }

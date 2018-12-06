@@ -65,7 +65,8 @@ abstract class MongoCollection<T extends Model, Id extends ObjectId> {
   /// Gets model by its id
   @protected
   Future<T> getObjectById(mongo.ObjectId id) async {
-    final objectList = await getObjectsByQuery(mongo.where.eq('_id', id)).toList();
+    final objectList =
+        await getObjectsByQuery(mongo.where.eq('_id', id)).toList();
     if (objectList.length == 0) return null;
     return objectList.first;
   }
@@ -74,11 +75,13 @@ abstract class MongoCollection<T extends Model, Id extends ObjectId> {
   @protected
   Stream<T> getObjectsByQuery(mongo.SelectorBuilder query) {
     if (query == null) throw (ArgumentError.notNull('query'));
-    return collection.aggregateToStream(buildPipeline(query)).map((data) => createModel(data));
+    return collection
+        .aggregateToStream(buildPipeline(query))
+        .map((data) => createModel(data));
   }
 
   /// Builds aggregation pipeline based on query.
-  /// 
+  ///
   /// Basic pipeline contains only following stages:
   /// - $match if `query` contains some criteria
   /// - $addFields adds `id` field as string representation of `_id`
@@ -86,7 +89,7 @@ abstract class MongoCollection<T extends Model, Id extends ObjectId> {
   /// - $sort sorts objects if `orderby` exists in `query`
   /// - $skip skips objects
   /// - $limit limits object count
-  /// 
+  ///
   /// In more comlicated cases it is enough to override this method
   @protected
   List<Map<String, dynamic>> buildPipeline(mongo.SelectorBuilder query) {
@@ -106,15 +109,10 @@ abstract class MongoCollection<T extends Model, Id extends ObjectId> {
         }
       }
     ]);
-    if (query.map.containsKey('orderby')) pipeline.add({
-      '\$sort': query.map['orderby']
-    });
-    if (query.paramSkip != 0) pipeline.add({
-      '\$skip': query.paramSkip
-    });
-    if (query.paramLimit != 0) pipeline.add({
-      '\$limit': query.paramLimit
-    });
+    if (query.map.containsKey('orderby'))
+      pipeline.add({'\$sort': query.map['orderby']});
+    if (query.paramSkip != 0) pipeline.add({'\$skip': query.paramSkip});
+    if (query.paramLimit != 0) pipeline.add({'\$limit': query.paramLimit});
     return pipeline;
   }
 

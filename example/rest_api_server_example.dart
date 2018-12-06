@@ -110,8 +110,10 @@ class User extends Model<UserId> {
 
   @override
   Map<String, dynamic> get json => {
-    'id': id?.json, 'name': name, 'occupation': occupation
-    }..removeWhere((key, value) => value == null);
+        'id': id?.json,
+        'name': name,
+        'occupation': occupation
+      }..removeWhere((key, value) => value == null);
 }
 
 class UsersCollection extends MongoCollection<User, UserId> {

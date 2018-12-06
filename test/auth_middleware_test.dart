@@ -69,7 +69,8 @@ void main() {
         await HttpClient().get(server.address.host, server.port, '/restricted');
     HttpClientResponse response = await request.close();
     expect(response.statusCode, HttpStatus.unauthorized);
-    String message = await response.transform(utf8.decoder).transform(json.decoder).join();
+    String message =
+        await response.transform(utf8.decoder).transform(json.decoder).join();
     expect(message, 'Authorization header is not provided');
   });
 
@@ -78,7 +79,8 @@ void main() {
         await HttpClient().post(server.address.host, server.port, '/anonimous');
     HttpClientResponse response = await request.close();
     expect(response.statusCode, HttpStatus.unauthorized);
-    String message = await response.transform(utf8.decoder).transform(json.decoder).join();
+    String message =
+        await response.transform(utf8.decoder).transform(json.decoder).join();
     expect(message, 'Authorization header is not provided');
   });
 
@@ -120,7 +122,8 @@ void main() {
     request.headers.add(HttpHeaders.authorizationHeader, token);
     response = await request.close();
     expect(response.statusCode, HttpStatus.unauthorized);
-    String message = await response.transform(utf8.decoder).transform(json.decoder).join();
+    String message =
+        await response.transform(utf8.decoder).transform(json.decoder).join();
     expect(message, 'JWT token expired!');
   });
 }

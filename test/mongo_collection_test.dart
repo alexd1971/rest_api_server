@@ -31,8 +31,10 @@ class TestModel extends Model<TestModelId> {
 
   @override
   Map<String, dynamic> get json => {
-    'id': id?.json, 'intParam': intParam, 'stringParam': stringParam
-    }..removeWhere((key, value) => value == null);
+        'id': id?.json,
+        'intParam': intParam,
+        'stringParam': stringParam
+      }..removeWhere((key, value) => value == null);
 }
 
 class TestMongoCollection extends MongoCollection<TestModel, TestModelId> {
@@ -126,7 +128,8 @@ main() {
 
     test('find with sort', () {
       final collection = TestMongoCollection(mongoCollection);
-      final found = collection.find(mongo.where.lt('intParam', 500).sortBy('intParam', descending: true));
+      final found = collection.find(
+          mongo.where.lt('intParam', 500).sortBy('intParam', descending: true));
       expect(found.map((obj) => obj.json),
           emitsInOrder([object2.json, object1.json]));
     });
@@ -134,15 +137,13 @@ main() {
     test('find with skip', () {
       final collection = TestMongoCollection(mongoCollection);
       final found = collection.find(mongo.where.skip(1));
-      expect(found.map((obj) => obj.json),
-          emitsInAnyOrder([object2.json]));
+      expect(found.map((obj) => obj.json), emitsInAnyOrder([object2.json]));
     });
 
     test('find with limit', () {
       final collection = TestMongoCollection(mongoCollection);
       final found = collection.find(mongo.where.limit(1));
-      expect(found.map((obj) => obj.json),
-          emitsInAnyOrder([object1.json]));
+      expect(found.map((obj) => obj.json), emitsInAnyOrder([object1.json]));
     });
   });
 

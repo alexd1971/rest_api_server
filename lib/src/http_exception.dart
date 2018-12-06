@@ -83,8 +83,7 @@ class ConflictException extends HttpException {
 // 410 Gone
 class GoneException extends HttpException {
   const GoneException([Map<String, dynamic> data, String detail = ""])
-      : super(
-            HttpStatus.gone, detail, data);
+      : super(HttpStatus.gone, detail, data);
 }
 
 // 412 Precondition Failed
